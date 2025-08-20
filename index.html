@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missione Anniversario</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Press Start 2P', cursive;
+    background: url('sfondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --- TITOLO + BLOCCO --- */
+  h1 {
+    min-width: 350px;
+    max-width: 1400px;
+    height: 90px; /* ridotta altezza */
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* testo a sinistra, blocco a destra */
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 10px 2px 10px 35px; /* top, right, bottom, left */
+    font-size: 1.8rem;
+    color: #ffcc00;
+    text-shadow: 2px 2px #000;
+    margin-bottom: 2rem;
+    position: relative; /* necessario per posizionare .block */
+  }
+  .block {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    transform: translateY(-6px); /* regola a piacere finché è visivamente centrato */
+    background: url('bloccoo.png') no-repeat center center;
+    background-size: contain;
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%, 50%, 100% { opacity: 1; }
+    25%, 75% { opacity: 0.4; }
+  }
+
+  /* --- BOTTONE --- */
+  button {
+    padding: 20px 60px;
+    font-size: 1rem;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 3px 3px #000;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  button:active {
+    transform: translateY(3px);
+    box-shadow: 1px 1px #000;
+  }
+
+  /* --- VIDEO --- */
+  .video-container {
+    display: none;
+    margin-top: 2rem;
+    border: 5px solid #ffcc00;
+    border-radius: 15px;
+    overflow: hidden;
+    width: 600px;
+    max-width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  video {
+    width: 100%;
+    height: auto;
+  }
+
+  /* --- MESSAGGIO FINALE --- */
+  .message {
+    display: none;
+    margin-top: 1.5rem;
+    color: #ff0066;
+    font-size: 1rem;
+    text-shadow: 1px 1px #000;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    border-radius: 10px;
+}
+ 
+  /* --- MONETE CHE CADONO --- */
+  .coin {
+    position: absolute;
+    top: -50px;
+    width: 60px;
+    height: 60px;
+    background: url('moneta.png') no-repeat center center;
+    background-size: contain;
+    animation: fall linear infinite;
+    z-index: 0;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-50px); }
+    100% { transform: translateY(110vh); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>
+    <span>Missione Anniversario – Livello Speciale</span>
+    <div class="block"></div>
+  </h1>
+
+  <button id="startButton">Avvia Missione</button>
+
+  <div class="video-container" id="videoContainer">
+    <video id="videoPlayer" controls>
+      <source src="video.mp4" type="video/mp4">
+      Il tuo browser non supporta il video.
+    </video>
+  </div>
+
+<div class="message" id="endMessage">
+  <span>Player 1 ti aspetta al prossimo livello ❤️</span>
+</div>
+
+<audio id="bgMusic" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  const button = document.getElementById('startButton');
+  const videoContainer = document.getElementById('videoContainer');
+  const videoPlayer = document.getElementById('videoPlayer');
+  const message = document.getElementById('endMessage');
+  const bgMusic = document.getElementById('bgMusic');
+
+  button.addEventListener('click', () => {
+    button.style.display = 'none';
+    videoContainer.style.display = 'block';
+    bgMusic.play();
+    videoPlayer.play();
+  });
+
+  videoPlayer.addEventListener('ended', () => {
+    message.style.display = 'block';
+});
+  videoPlayer.addEventListener('play', () => {
+    message.style.display = 'none';
+});
+  videoPlayer.addEventListener('seeking', () => {
+    message.style.display = 'none';
+});
+ 
+
+  // Genera monete che cadono
+  function createCoin() {
+    const coin = document.createElement("div");
+    coin.classList.add("coin");
+    coin.style.left = Math.random() * window.innerWidth + "px";
+    const duration = 3 + Math.random() * 2;
+    coin.style.animationDuration = duration + "s";
+    document.body.appendChild(coin);
+
+    // Rimuove la moneta dopo che cade
+    setTimeout(() => {
+      coin.remove();
+    }, duration * 1000);
+}
+ // Fai cadere monete ogni tot tempo
+  setInterval(createCoin, 450);
+
+</script>
